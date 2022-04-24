@@ -72,6 +72,21 @@ func (l *LogProcess)Process()  {
 	}
 }
 
+// 测试是否能够自动化读取与写入
+func TestWrite()  {
+	file, err := os.OpenFile("./access.log",os.O_APPEND, 0666)
+	if err != nil {
+		fmt.Println("err: ", err)
+	}
+	fmt.Println("成功打开文件")
+	defer file.Close()
+	for i:=1;i<=100;i++{
+		file.WriteString(fmt.Sprintf("this is log %v \n",i))
+		time.Sleep(time.Second)
+	}
+}
+
+
 
 func main()  {
 	r :=  &ReadFromFile{
@@ -92,5 +107,6 @@ func main()  {
 	go lp.read.Read(lp.rc)
 	go lp.Process()
 	go lp.write.Write(lp.wc)
+	//TestWrite()
 	time.Sleep(60*time.Second)
 }
